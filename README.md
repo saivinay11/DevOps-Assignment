@@ -1,125 +1,149 @@
-# DevOps Assignment
+# DevOps Assignment – Two-Tier Web Application
 
-This project consists of a FastAPI backend and a Next.js frontend that communicates with the backend.
+This repository contains a production-grade DevOps implementation of a two-tier application consisting of:
+- **FastAPI backend**
+- **Next.js frontend**
 
-## Project Structure
+The project demonstrates end-to-end DevOps practices including containerization, CI/CD automation, Infrastructure as Code (Terraform), monitoring, security, and load balancing across **AWS and GCP**.
 
-```
-.
-├── backend/               # FastAPI backend
-│   ├── app/
-│   │   └── main.py       # Main FastAPI application
-│   └── requirements.txt    # Python dependencies
-└── frontend/              # Next.js frontend
-    ├── pages/
-    │   └── index.js     # Main page
-    ├── public/            # Static files
-    └── package.json       # Node.js dependencies
-```
+---
 
-## Prerequisites
+## 🧱 Architecture Overview
 
-- Python 3.8+
-- Node.js 16+
-- npm or yarn
+- Frontend: Next.js (containerized)
+- Backend: FastAPI (containerized)
+- CI/CD: GitHub Actions
+- Infrastructure: Terraform
+- AWS Services:
+  - VPC
+  - ECS (Fargate)
+  - Application Load Balancer
+  - ECR
+  - CloudWatch
+- GCP Services:
+  - Cloud Run
+  - Artifact Registry
+- Load Balancing: AWS ALB
+- Monitoring: AWS CloudWatch
 
-## Backend Setup
+---
 
-1. Navigate to the backend directory:
-   ```bash
-   cd backend
-   ```
+## 🔀 Git Workflow
 
-2. Create a virtual environment (recommended):
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: .\venv\Scripts\activate
-   ```
+- `main` – production-ready branch
+- `develop` – integration branch
+- Feature-based commits with meaningful messages
+- CI pipeline triggered on push to `develop`
 
-3. Install dependencies:
-   ```bash
-   pip install -r requirements.txt
-   ```
+---
 
-4. Run the FastAPI server:
-   ```bash
-   uvicorn app.main:app --reload --port 8000
-   ```
+## 🐳 Docker & Containerization
 
-   The backend will be available at `http://localhost:8000`
+- Multi-stage Dockerfiles for backend and frontend
+- Small image size
+- Non-root execution
+- Environment-based configuration
+- Docker Compose used for local development
 
-## Frontend Setup
+---
 
-1. Navigate to the frontend directory:
-   ```bash
-   cd frontend
-   ```
+## 🚀 CI/CD Pipeline (GitHub Actions)
 
-2. Install dependencies:
-   ```bash
-   npm install
-   # or
-   yarn
-   ```
+On every push to `develop`:
+- Backend validation
+- Frontend build
+- Docker image build
+- Docker images pushed to AWS ECR
 
-3. Configure the backend URL (if different from default):
-   - Open `.env.local`
-   - Update `NEXT_PUBLIC_API_URL` with your backend URL
-   - Example: `NEXT_PUBLIC_API_URL=https://your-backend-url.com`
+### CI Pipeline Evidence
+![CI Pipeline Success](screenshots/ci-pipeline-success.jpeg)
 
-4. Run the development server:
-   ```bash
-   npm run dev
-   # or
-   yarn dev
-   ```
+---
 
-   The frontend will be available at `http://localhost:3000`
+## 🏗 Infrastructure as Code (Terraform)
 
-## Changing the Backend URL
+All AWS infrastructure was provisioned **only using Terraform**.
 
-To change the backend URL that the frontend connects to:
+### Terraform Plan
+![Terraform Plan](screenshots/terraform-plan.jpeg)
 
-1. Open the `.env.local` file in the frontend directory
-2. Update the `NEXT_PUBLIC_API_URL` variable with your new backend URL
-3. Save the file
-4. Restart the Next.js development server for changes to take effect
+### Terraform Apply
+![Terraform Apply](screenshots/terraform-apply.jpeg)
 
-Example:
-```
-NEXT_PUBLIC_API_URL=https://your-new-backend-url.com
-```
+Provisioned resources include:
+- Custom VPC with public subnets
+- Internet Gateway & route tables
+- Application Load Balancer
+- ECS Cluster & Services
+- IAM roles with least privilege
+- Security Groups
 
-## For deployment:
-   ```bash
-   npm run build
-   # or
-   yarn build
-   ```
+---
 
-   AND
+## ⚖️ Load Balancing & High Availability
 
-   ```bash
-   npm run start
-   # or
-   yarn start
-   ```
+- Backend runs with **multiple ECS tasks**
+- Traffic distributed via Application Load Balancer
+- Service remains available even if one task stops
 
-   The frontend will be available at `http://localhost:3000`
+### ALB Target Group & Traffic Distribution
+![ALB Target Group](screenshots/alb-backend-tg.jpeg)
 
-## Testing the Integration
+---
 
-1. Ensure both backend and frontend servers are running
-2. Open the frontend in your browser (default: http://localhost:3000)
-3. If everything is working correctly, you should see:
-   - A status message indicating the backend is connected
-   - The message from the backend: "You've successfully integrated the backend!"
-   - The current backend URL being used
+## 📊 Monitoring & Observability
 
-## API Endpoints
+AWS CloudWatch is used to monitor:
+- Request count
+- Active connections
+- HTTP response codes
+- Target response time
 
-- `GET /api/health`: Health check endpoint
-  - Returns: `{"status": "healthy", "message": "Backend is running successfully"}`
+### CloudWatch Metrics Dashboard
+![CloudWatch Metrics](screenshots/cloudwatch-metrics.jpeg)
 
-- `GET /api/message`: Get the integration message
-  - Returns: `{"message": "You've successfully integrated the backend!"}`
+---
+
+## 🔐 Security & IAM
+
+- Least-privilege IAM roles
+- No secrets committed to Git
+- Container registry access via IAM
+- Network access restricted via security groups
+
+---
+
+## 🌐 Live Endpoints
+
+### AWS
+- Backend (ALB):  
+  `http://devops-alb-979822109.us-east-1.elb.amazonaws.com/api/health`
+
+### GCP
+- Backend (Cloud Run):  
+  `https://devops-backend-528010041452.us-central1.run.app/api/health`
+
+---
+
+## 📦 Deliverables Checklist
+
+- [x] Source code
+- [x] Dockerfiles
+- [x] Terraform configurations
+- [x] CI/CD workflows
+- [x] Monitoring dashboards
+- [x] Load balancing validation
+- [x] Multi-cloud deployment (AWS + GCP)
+
+---
+
+## 🎥 Demo Video
+
+A 5–8 minute demo video explains:
+- Architecture
+- Git workflow
+- Dockerization
+- CI/CD pipeline
+- Terraform provisioning
+- Monitoring & load balancing
+
