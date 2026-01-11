@@ -116,6 +116,12 @@ AWS CloudWatch is used to monitor:
 ## 🌐 Live Endpoints
 
 ### AWS
+
+- Frontend (URL):
+  http://devops-assignment-frontend-saivinay.s3-website-us-east-1.amazonaws.com
+
+  The frontend communicates with the backend through the Application Load Balancer URL configured via environment variables.
+
 - Backend (ALB):  
   `http://devops-alb-979822109.us-east-1.elb.amazonaws.com/api/health`
 
